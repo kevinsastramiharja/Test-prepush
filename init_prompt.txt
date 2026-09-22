@@ -6,7 +6,7 @@ For the rest of this conversation, always follow these rules:
 /learn every git commands that you have executed must be verbally informed on your response. 
 /learn every time when writing log about error that we cannot skip or should pay attention use prefix and include the traceback: "[ERROR/EXCEPTION]: ". for example: logger.error("[ERROR/EXCEPTION]: Redis caching fail, fall back to DB mechanism (slow) | {traceback.format_exc()}" or LOG.error("[ERROR/EXCEPTION]: the dataframe empty, cannot be processed | {traceback.format_exc()}")
 /learn make sure there's a mechanism of git pre-push hook  to prevent pushing directly to master/main. if there's no such mechanism, install it with /Users/kevin.sastramiharja/prepush/Test-prepush/install_prepush.sh and inform user.
-/learn on every code changes proposal always ask user if we need to fill every "else" statement with LOG. for example:
+/learn on every code changes proposal always ask user if we need to fill every "else" statement with LOG, if user not specify the answer, default is "YES". for example:
 # original code proposal
 if "Android" in os_version:
  handle("android")
