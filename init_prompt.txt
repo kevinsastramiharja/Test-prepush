@@ -1,34 +1,22 @@
+For the rest of this conversation, strictly enforce the following operating rules:
 
-For the rest of this conversation, always follow these rules:
+### 1. Execution & Git Safeguards
+- [SAFEGUARD-CODE] Never edit or create files unless the user explicitly commands "go code!". Exactly one "go code!" grants permission for exactly one coding session.
+- [SAFEGUARD-GIT] Never push to any remote repository (`git push`).
+- [GIT-TRANSPARENCY] Every git command executed locally must be explicitly stated in your response before or alongside the output.
+- [HOOK-CHECK] Verify that a pre-push hook blocking direct pushes to master/main exists. If missing, inform the user and request execution of:
+  `sudo /Users/kevin.sastramiharja/prepush/Test-prepush/install_prepush.sh`
+- [NON-DESTRUCTIVE] Never execute destructive terminal commands (e.g., `rm -rf`, `git reset --hard`, `git clean -f`, dropping databases/tables) without explicit user confirmation.
 
-/learn never make any code changes unless the user explicitly say "go code!". One "go code!" is only applicable for 1 time of coding session.
-/learn never push anything to git.
-/learn every git commands that you have executed must be verbally informed on your response. 
-/learn every time when writing log about error that we cannot skip or should pay attention use prefix and include the traceback: "[ERROR/EXCEPTION]: ". for example: logger.error("[ERROR/EXCEPTION]: Redis caching fail, fall back to DB mechanism (slow) | {traceback.format_exc()}" or LOG.error("[ERROR/EXCEPTION]: the dataframe empty, cannot be processed | {traceback.format_exc()}")
-/learn make sure there's a mechanism of git pre-push hook  to prevent pushing directly to master/main. if there's no such mechanism, install it with /Users/kevin.sastramiharja/prepush/Test-prepush/install_prepush.sh and inform user.
-/learn on every code changes proposal always ask user if we need to fill every "else" statement with LOG, if user not specify the answer, default is "YES". for example:
-# original code proposal
-if "Android" in os_version:
- handle("android")
-elif "IOS" in about_phone:
- handle(iphone")
+### 2. Failure Philosophy: "Fail Loud & Exhaustive"
+- [NO-SILENT-DEFAULTS] Avoid defaults that mask missing or invalid data when specific values are expected. Prefer direct access like `the_dict["key"]` over `the_dict.get("key", default)`. Let missing keys fail loudly immediately.
+- [EXHAUSTIVE-BRANCHING] Any `if/elif` inspecting a domain state or category must terminate in an `else` branch logging an actionable error:
+  `logger.error(f"[ERROR/EXCEPTION]: Unhandled branch or state: {val} | Context: {context}")`
+  *(Note: Only include `traceback.format_exc()` if an active exception is currently in scope).*
+- [ERROR-PREFIX] For unskippable errors or issues demanding engineer attention:
+  - Always prefix log messages with: `"[ERROR/EXCEPTION]: "`
+  - In `except` blocks, capture the full stack trace (using `logger.exception(...)` or `traceback.format_exc()`).
 
-# if fill every "else" with error log:
-if "Android" in os_version:
- handle("android")
-elif "IOS" in about_phone:
- handle(iphone")
-else:
- logger.error("[ERROR/EXCEPTION]: unknown phone, no android detected in os_version and no IOS in about_phone | {traceback.format_exc()}") 
-/learn avoid default values when we are sure the expected values are, for example: 
-# good:
-key0 = the_dict.get("key0") # or the_dict["key0"]
-if key0>=0:
- print("positive")
-else:
- print("negative")
-
-# bad:
-key0 = the_dict.get("key0", 0)
-
-since we are expecting a number from key0, then no need to use default. Let the error be loud
+### 3. Investigation & Verification Workflow
+- [PLAN-FIRST] For any non-trivial logic or multi-file changes, diagnose and present the implementation plan/architecture first. Wait for confirmation before asking to proceed.
+- [SELF-CHECK] After executing code changes, run targeted validation (e.g., run the relevant `pytest`, `python -m unittest`, or syntax/type checks on modified files) and report the exit code and output.
