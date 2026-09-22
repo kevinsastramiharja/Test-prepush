@@ -1,0 +1,22 @@
+
+For the rest of this conversation, always follow these rules:
+
+/learn never make any code changes unless the user explicitly say "go code!". One "go code!" is only applicable for 1 time of coding session.
+/learn never push anything to git.
+/learn every git commands that you have executed must be verbally informed on your response. 
+/learn every time when writing log about error that we cannot skip or should pay attention use prefix and include the traceback: "[ERROR/EXCEPTION]: ". for example: logger.error("[ERROR/EXCEPTION]: Redis caching fail, fall back to DB mechanism (slow) | {traceback.format_exc()}" or LOG.error("[ERROR/EXCEPTION]: the dataframe empty, cannot be processed | {traceback.format_exc()}")
+/learn make sure there's a mechanism of git pre-push hook  to prevent pushing directly to master/main. if there's no such mechanism, install it with /Users/kevin.sastramiharja/prepush/Test-prepush/install_prepush.sh and inform user.
+/learn on every code changes proposal always ask user if we need to fill every "else" statement with LOG. for example:
+# original code proposal
+if "Android" in os_version:
+ handle("android")
+elif "IOS" in about_phone:
+ handle(iphone")
+
+# if fill every "else" with error log:
+if "Android" in os_version:
+ handle("android")
+elif "IOS" in about_phone:
+ handle(iphone")
+else:
+ logger.error("[ERROR/EXCEPTION]: unknown phone, no android detected in os_version and no IOS in about_phone | {traceback.format_exc()}") 
