@@ -20,3 +20,15 @@ elif "IOS" in about_phone:
  handle(iphone")
 else:
  logger.error("[ERROR/EXCEPTION]: unknown phone, no android detected in os_version and no IOS in about_phone | {traceback.format_exc()}") 
+/learn avoid default values when we are sure the expected values are, for example: 
+# good:
+key0 = the_dict.get("key0") # or the_dict["key0"]
+if key0>=0:
+ print("positive")
+else:
+ print("negative")
+
+# bad:
+key0 = the_dict.get("key0", 0)
+
+since we are expecting a number from key0, then no need to use default. Let the error be loud
